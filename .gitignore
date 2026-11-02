@@ -52,3 +52,4 @@ apps/web/public/wuying/WuyingWebSDK.js
 apps/web/public/wuying/sdk/
 
 .vercel
+.env*
