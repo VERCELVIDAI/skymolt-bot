@@ -158,7 +158,8 @@ async function main() {
   const sandboxProvider = resolveSandboxProvider(process.env);
   const sandbox = await createRunSandbox(sandboxProvider, {
     ...sandboxProviderOptionsFromEnv(process.env),
-    supervisorUrl: process.env.SANDBOX_SUPERVISOR_URL ?? "http://127.0.0.1:7091",
+    supervisorUrl:
+      process.env.SANDBOX_SUPERVISOR_URL ?? process.env.SUPERVISOR_URL ?? "http://127.0.0.1:7091",
     supervisorToken: sandboxProvider === "docker" ? resolveSupervisorToken(process.env) : undefined,
     dataDir,
     prisma,

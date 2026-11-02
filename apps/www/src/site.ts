@@ -3,7 +3,10 @@ export const SITE_URL = "https://rakazo.com";
 export const SITE_DESCRIPTION =
   "SkyMolt Bot is an open source AI agent platform for persistent teammates that do real work. Your keys, your model, your machine.";
 
-export const APP_URL = "https://app.rakazo.com";
+export const APP_URL =
+  (typeof process !== "undefined" &&
+    (process.env.PUBLIC_APP_URL || process.env.API_URL || process.env.WEB_URL)) ||
+  "https://app.rakazo.com";
 export const PLUGIN_SUBMISSIONS_URL = `${APP_URL}/api/v1/plugin-submissions`;
 export const CATALOG_URL =
   "https://rakazo-public.fsn1.your-objectstorage.com/integrations/catalog.json";
