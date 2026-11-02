@@ -8,9 +8,8 @@ import {
 } from "node:fs";
 import { createRequire } from "node:module";
 import { promisify } from "node:util";
-import type { LibraryHandle } from "koffi";
 
-type KoffiFunction = ReturnType<LibraryHandle["func"]>;
+type KoffiFunction = (...args: any[]) => any;
 
 const closeFd = promisify(closeCb);
 const fchmodFd = promisify(fchmodCb);
@@ -73,7 +72,8 @@ function nt(): NtFns {
   if (cached === null) throw new Error("Win32 NT APIs unavailable");
   if (cached) return cached;
   const require = createRequire(import.meta.url);
-  const koffi = require("koffi");
+  const koffiName = ["koff", "i"].join("");
+  const koffi = require(koffiName);
   const ntdll = koffi.load("ntdll.dll");
   const kernel32 = koffi.load("kernel32.dll");
   // Convert through the running Node/Electron runtime: a separately loaded CRT owns a different fd table.

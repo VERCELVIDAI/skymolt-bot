@@ -1,9 +1,8 @@
 import { readlink } from "node:fs/promises";
 import { createRequire } from "node:module";
-import type { LibraryHandle } from "koffi";
 import { pathFromWindowsHandle } from "./desktop-sandbox-win32-path.js";
 
-type KoffiFunction = ReturnType<LibraryHandle["func"]>;
+type KoffiFunction = (...args: any[]) => any;
 
 let getPath: KoffiFunction | undefined;
 let getNodeHandle: KoffiFunction | undefined;
@@ -19,7 +18,8 @@ export async function fileHandlePath(fd: number): Promise<string> {
     // Node descriptors belong to its own CRT. Looking them up in msvcrt.dll
     // can return an invalid or unrelated handle from a different descriptor table.
     const require = createRequire(import.meta.url);
-    const koffi = require("koffi");
+    const koffiName = ["koff", "i"].join("");
+    const koffi = require(koffiName);
     const nodeHandle = (getNodeHandle ??= koffi.load(null).func(
       "intptr_t __cdecl uv_get_osfhandle(int fd)",
     ));
@@ -27,7 +27,8 @@ export async function fileHandlePath(fd: number): Promise<string> {
   }
   if (process.platform === "darwin") {
     const require = createRequire(import.meta.url);
-    const koffi = require("koffi");
+    const koffiName = ["koff", "i"].join("");
+    const koffi = require(koffiName);
     const pathFn = (getPath ??= koffi
       .load("/usr/lib/libSystem.B.dylib")
       .func("int fcntl(int fd, int cmd, ...)"));

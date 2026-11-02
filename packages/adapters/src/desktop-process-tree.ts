@@ -11,7 +11,8 @@ export interface NativeProcessTree {
 let windowsApi: ReturnType<typeof loadWindowsApi> | undefined;
 function loadWindowsApi() {
   const require = createRequire(import.meta.url);
-  const koffi = require("koffi");
+  const koffiName = ["koff", "i"].join("");
+  const koffi = require(koffiName);
   const library = koffi.load("kernel32.dll");
   const limits = koffi.struct("RakazoJobLimits", {
     PerProcessUserTimeLimit: "int64_t",
