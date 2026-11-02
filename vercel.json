@@ -8,6 +8,7 @@
     "api": {
       "root": "apps/api",
       "framework": "hono",
+      "entrypoint": "src/index.ts",
       "bindings": [
         {
           "type": "service",

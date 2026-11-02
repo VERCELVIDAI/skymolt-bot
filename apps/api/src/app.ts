@@ -1604,3 +1604,5 @@ export function logUnexpectedRpcError(error: unknown, path: readonly string[]): 
   const where = `rpc ${path.join("/")} failed`;
   getLogger().error(where, error);
 }
+
+export default createApp;
