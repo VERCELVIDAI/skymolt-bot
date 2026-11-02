@@ -7,6 +7,7 @@
 // declares it (pnpm keeps dependencies strict), not from dist/. Each one is therefore
 // rewritten to the relative path of the file it resolves to from its importer.
 import { builtinModules } from "node:module";
+import { writeFileSync, mkdirSync } from "node:fs";
 import path from "node:path";
 import { build } from "esbuild";
 
@@ -36,6 +37,13 @@ for (const entry of entries) {
               return { path: args.path, external: true };
             }
             if (args.path.startsWith("@rakazo/")) return undefined;
+
+            // When building for Vercel / serverless runtimes, preserve bare package specifiers
+            // so Node / NFT resolves them from node_modules instead of a hardcoded relative path.
+            if (process.env.VERCEL) {
+              return { path: args.path, external: true };
+            }
+
             const resolved = await builder.resolve(args.path, {
               kind: args.kind,
               resolveDir: args.resolveDir,
@@ -52,3 +60,11 @@ for (const entry of entries) {
     ],
   });
 }
+
+// Ensure dist directory has package.json with type: module so Node.js in serverless runtimes
+// executes .js files as ESM without failing with "SyntaxError: Cannot use import statement outside a module"
+mkdirSync(path.resolve("dist"), { recursive: true });
+writeFileSync(
+  path.resolve("dist", "package.json"),
+  JSON.stringify({ type: "module" }, null, 2)
+);
