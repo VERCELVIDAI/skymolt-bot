@@ -37,7 +37,6 @@ import {
   SpaceLimitError,
 } from "@rakazo/db";
 import { getLogger } from "@rakazo/logging";
-import { Unzip, UnzipInflate } from "fflate";
 import type { Hono } from "hono";
 import { cancelBody } from "./http-body.js";
 import type { SpaceDeletionDeps } from "./space-deletion.js";
@@ -137,6 +136,7 @@ export async function readArchive(
   sink: ArchiveSink,
 ): Promise<void> {
   type Event = { entry: ArchiveEntry } | { data: Uint8Array; final: boolean };
+  const { Unzip, UnzipInflate } = await import("fflate");
   const queue: Event[] = [];
   let failure: unknown;
   let index = 0;

@@ -6,10 +6,9 @@
       "framework": "vite"
     },
     "api": {
-      "root": ".",
+      "root": "apps/api",
       "framework": "hono",
-      "entrypoint": "apps/api/src/index.ts",
-      "buildCommand": "pnpm --filter @rakazo/api build",
+      "entrypoint": "src/index.ts",
       "bindings": [
         {
           "type": "service",

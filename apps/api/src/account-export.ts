@@ -21,7 +21,6 @@ import {
   runGeneratorAsTenant,
 } from "@rakazo/db";
 import { getLogger } from "@rakazo/logging";
-import { Zip, ZipDeflate } from "fflate";
 import type { Hono } from "hono";
 
 export type AccountExportStores = {
@@ -48,21 +47,29 @@ export function zipStream(
   files: AsyncIterable<ArchiveFile>,
   maxBytes = ACCOUNT_EXPORT_MAX_ARCHIVE_BYTES,
 ): ReadableStream<Uint8Array> {
-  const zip = new Zip();
+  let zip: any;
+  let ZipDeflate: any;
   const output: Uint8Array[] = [];
   let finished = false;
   let failure: Error | null = null;
   let written = 0;
-  zip.ondata = (error, chunk, final) => {
-    if (error) failure = error;
-    else {
-      written += chunk.length;
-      if (written > maxBytes) failure = new Error("Account export exceeds the zip size limit");
-      if (chunk.length) output.push(chunk);
-      if (final) finished = true;
-    }
-  };
+  async function initZip() {
+    if (zip) return;
+    const fflate = await import("fflate");
+    ZipDeflate = fflate.ZipDeflate;
+    zip = new fflate.Zip();
+    zip.ondata = (error: any, chunk: any, final: any) => {
+      if (error) failure = error;
+      else {
+        written += chunk.length;
+        if (written > maxBytes) failure = new Error("Account export exceeds the zip size limit");
+        if (chunk.length) output.push(chunk);
+        if (final) finished = true;
+      }
+    };
+  }
   async function* steps(): AsyncGenerator<void> {
+    await initZip();
     for await (const file of files) {
       const entry = new ZipDeflate(file.path, { level: 6 });
       zip.add(entry);
