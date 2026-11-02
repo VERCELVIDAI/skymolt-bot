@@ -60,13 +60,13 @@ export function pluginSubmissionReviewedEmail(
     submission.email,
     locale,
     approved
-      ? say("{name} is in the Rakazo marketplace", { name })
-      : say("Your Rakazo plugin submission: {name}", { name }),
+      ? say("{name} is in the SkyMolt Bot marketplace", { name })
+      : say("Your SkyMolt Bot plugin submission: {name}", { name }),
     <>
       <Text>
         {approved
-          ? say("{name} is now listed in the Rakazo plugin marketplace.", { name })
-          : say("We couldn't list {name} in the Rakazo plugin marketplace.", { name })}
+          ? say("{name} is now listed in the SkyMolt Bot plugin marketplace.", { name })
+          : say("We couldn't list {name} in the SkyMolt Bot plugin marketplace.", { name })}
       </Text>
       {submission.reason ? <Text>{submission.reason}</Text> : null}
       <Text>{say("Have any questions? Reply to this email.")}</Text>

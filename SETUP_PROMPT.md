@@ -1,4 +1,4 @@
-# Set up Rakazo with a coding agent
+# Set up SkyMolt Bot with a coding agent
 
 Copy one of the prompts below into a coding agent.
 
@@ -7,7 +7,7 @@ Copy one of the prompts below into a coding agent.
 Prefer this when the user wants a running web UI with Docker only (no Node/pnpm clone).
 
 ```text
-Set up Rakazo from published GHCR images and leave the web UI running.
+Set up SkyMolt Bot from published images and leave the web UI running.
 
 Work like a careful onboarding engineer: perform the setup yourself, explain only decisions or blockers, and verify the product through the UI.
 

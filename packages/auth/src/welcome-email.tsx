@@ -21,12 +21,12 @@ export function welcomeEmail(
   return message(
     user.email,
     locale,
-    say("Welcome to Rakazo"),
+    say("Welcome to SkyMolt Bot"),
     <>
       <Text>{greeting(say, user.name)}</Text>
-      <Text>{say("Thanks for signing up for Rakazo.")}</Text>
+      <Text>{say("Thanks for signing up for SkyMolt Bot.")}</Text>
       <Text>
-        {say("Rakazo also has apps for")}{" "}
+        {say("SkyMolt Bot also has apps for")}{" "}
         {/* The language's own list ("A, B, and C", "A, B y C"), with each app a link. */}
         {new Intl.ListFormat(locale, { type: "conjunction" })
           .formatToParts(Object.keys(APPS))
@@ -49,7 +49,7 @@ export function welcomeEmail(
         .
       </Text>
       <Text>
-        {say("Rakazo is open source. If you like it,")}{" "}
+        {say("SkyMolt Bot is open source. If you like it,")}{" "}
         <Link href="https://github.com/elie222/rakazo" style={linkStyle}>
           {say("a star on GitHub")}
         </Link>{" "}
@@ -61,7 +61,7 @@ export function welcomeEmail(
           href="https://github.com/elie222/rakazo/blob/main/docs/self-host.md"
           style={linkStyle}
         >
-          {say("Self-host Rakazo")}
+          {say("Self-host SkyMolt Bot")}
         </Link>
         .
       </Text>

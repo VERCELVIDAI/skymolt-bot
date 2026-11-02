@@ -1,0 +1,41 @@
+services:
+  - type: web
+    name: skymolt-bot
+    runtime: docker
+    dockerfilePath: Dockerfile
+    plan: standard
+    region: oregon
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: skymolt-db
+          property: connectionString
+      - key: DATABASE_MIGRATION_URL
+        fromDatabase:
+          name: skymolt-db
+          property: connectionString
+      - key: BETTER_AUTH_SECRET
+        generateValue: true
+      - key: ENCRYPTION_KEY
+        generateValue: true
+      - key: SCREEN_PROXY_SECRET
+        generateValue: true
+      - key: SANDBOX_SUPERVISOR_TOKEN
+        generateValue: true
+      - key: CONTENT_ENCRYPTION
+        value: "on"
+      - key: SIGNUPS_ENABLED
+        value: "true"
+      - key: OWNER_EMAIL
+        sync: false
+      - key: OWNER_PASSWORD
+        generateValue: true
+
+databases:
+  - name: skymolt-db
+    databaseName: skymolt
+    user: skymolt
+    plan: standard
+    region: oregon

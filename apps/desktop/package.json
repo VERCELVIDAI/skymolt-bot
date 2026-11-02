@@ -1,9 +1,9 @@
 {
   "name": "@rakazo/desktop",
-  "productName": "Rakazo",
+  "productName": "SkyMolt Bot",
   "version": "0.4.0",
   "author": {
-    "name": "Rakazo"
+    "name": "SkyMolt Bot"
   },
   "license": "Apache-2.0",
   "type": "module",
