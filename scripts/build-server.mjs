@@ -38,12 +38,6 @@ for (const entry of entries) {
             }
             if (args.path.startsWith("@rakazo/")) return undefined;
 
-            // When building for Vercel / serverless runtimes, preserve bare package specifiers
-            // so Node / NFT resolves them from node_modules instead of a hardcoded relative path.
-            if (process.env.VERCEL) {
-              return { path: args.path, external: true };
-            }
-
             const resolved = await builder.resolve(args.path, {
               kind: args.kind,
               resolveDir: args.resolveDir,
