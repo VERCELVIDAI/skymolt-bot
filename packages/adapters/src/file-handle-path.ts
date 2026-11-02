@@ -1,5 +1,6 @@
 import { readlink } from "node:fs/promises";
-import koffi, { type LibraryHandle } from "koffi";
+import { createRequire } from "node:module";
+import type { LibraryHandle } from "koffi";
 import { pathFromWindowsHandle } from "./desktop-sandbox-win32-path.js";
 
 type KoffiFunction = ReturnType<LibraryHandle["func"]>;
@@ -17,13 +18,21 @@ export async function fileHandlePath(fd: number): Promise<string> {
   if (process.platform === "win32") {
     // Node descriptors belong to its own CRT. Looking them up in msvcrt.dll
     // can return an invalid or unrelated handle from a different descriptor table.
-    getNodeHandle ??= koffi.load(null).func("intptr_t __cdecl uv_get_osfhandle(int fd)");
-    return pathFromWindowsHandle(getNodeHandle(fd) as number | bigint);
+    const require = createRequire(import.meta.url);
+    const koffi = require("koffi");
+    const nodeHandle = (getNodeHandle ??= koffi.load(null).func(
+      "intptr_t __cdecl uv_get_osfhandle(int fd)",
+    ));
+    return pathFromWindowsHandle(nodeHandle(fd) as number | bigint);
   }
   if (process.platform === "darwin") {
-    getPath ??= koffi.load("/usr/lib/libSystem.B.dylib").func("int fcntl(int fd, int cmd, ...)");
+    const require = createRequire(import.meta.url);
+    const koffi = require("koffi");
+    const pathFn = (getPath ??= koffi
+      .load("/usr/lib/libSystem.B.dylib")
+      .func("int fcntl(int fd, int cmd, ...)"));
     const buffer = Buffer.alloc(1024); // Darwin MAXPATHLEN
-    const result = getPath(fd, 50 /* F_GETPATH */, "void *", buffer) as number;
+    const result = pathFn(fd, 50 /* F_GETPATH */, "void *", buffer) as number;
     const end = buffer.indexOf(0);
     if (result !== 0 || end <= 0) throw new Error("Cannot resolve the opened home file");
     return buffer.toString("utf8", 0, end);

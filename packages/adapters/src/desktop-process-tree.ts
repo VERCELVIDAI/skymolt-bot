@@ -1,6 +1,6 @@
 import type { ChildProcessWithoutNullStreams } from "node:child_process";
 import { spawn } from "node:child_process";
-import koffi from "koffi";
+import { createRequire } from "node:module";
 
 export interface NativeProcessTree {
   alive(): boolean;
@@ -10,6 +10,8 @@ export interface NativeProcessTree {
 
 let windowsApi: ReturnType<typeof loadWindowsApi> | undefined;
 function loadWindowsApi() {
+  const require = createRequire(import.meta.url);
+  const koffi = require("koffi");
   const library = koffi.load("kernel32.dll");
   const limits = koffi.struct("RakazoJobLimits", {
     PerProcessUserTimeLimit: "int64_t",
